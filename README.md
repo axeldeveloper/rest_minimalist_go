@@ -1,5 +1,6 @@
 # Projeto rest minimalist
 ## High performance, minimalist Go web framework 
+### https://code.labstack.com/go
 
 ![My Go logo](https://github.com/axeldeveloper/rest_go_mongo/blob/master/axel-pk-go.png?raw=true "Axel alexander")
 
@@ -19,7 +20,7 @@
 - ECHO
 
 # Craindo projeto
-go mod init api-test
+go mod init rest_minimalist_go
 
 # Instalando pacotes 
 
@@ -37,7 +38,7 @@ go mod init api-test
 
 
 #  Rum server
-> go run main.go
+> go run server.go
 
 # Echo
 

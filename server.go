@@ -1,14 +1,13 @@
 package main
  
 import (
-            "database/sql"
-            "fmt"
-            _ "github.com/go-sql-driver/mysql"
-            "github.com/labstack/echo"
-            "github.com/labstack/echo/middleware"
-            "net/http"
+	"database/sql"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
+	"net/http"
 )
-
 
 type PersonScan struct {
 	id, name, salary, age string
@@ -45,7 +44,6 @@ func CreateCon() *sql.DB {
 	}
 	return db
 }
-
 func getPersons(c echo.Context)   error {
 	var employee PersonScan
 	sql := "SELECT id, name, salary, age FROM person ORDER BY id DESC"
@@ -93,7 +91,7 @@ func CreatePerson(c echo.Context) error {
 		return err
 	}
 	db  := CreateCon()
-	sql := "INSERT INTO person(name, age, salary) VALUES( ?, ?, ?)"
+	sql := "INSERT INTO person(name,  salary, age) VALUES( ?, ?, ?)"
 	stmt, err := db.Prepare(sql)
 	
 	if err != nil {
@@ -112,6 +110,45 @@ func CreatePerson(c echo.Context) error {
 	fmt.Println(result.LastInsertId())	
 	return c.JSON(http.StatusCreated, emp)
 }
+func UpdatePerson(c echo.Context) error {
+	emp := new(Person)
+	if err := c.Bind(emp); err != nil {
+		return err
+	}
+
+	id := c.Param("id")
+	if id == "" {
+		panic("error")
+	}
+
+	db  := CreateCon()
+	sql := `UPDATE
+				person
+			SET
+				name   = ?,
+				salary = ?,
+				age    = ?
+			WHERE
+				id = ?`
+
+	stmt, err := db.Prepare(sql)
+	
+	if err != nil {
+		fmt.Print(err.Error())
+		return c.JSON(http.StatusNotFound , "Erro ao inserir o registro : "+ err.Error())
+	}
+	
+	defer stmt.Close()
+	result, err2 := stmt.Exec(emp.Name, emp.Salary, emp.Age, emp.Id)
+	
+	// Exit if we get an error
+	if err2 != nil {
+		//panic(err2)
+		return c.JSON(http.StatusNotFound , "Panico : "+ err2.Error())
+	}
+	fmt.Println(result.LastInsertId())	
+	return c.JSON(http.StatusAccepted, emp)
+}
 func DeletePerson(c echo.Context) error {
 	db  := CreateCon()
 	sql := "Delete FROM person Where id = ?"
@@ -128,7 +165,6 @@ func DeletePerson(c echo.Context) error {
 	fmt.Println(result.RowsAffected())
 	return c.JSON(http.StatusOK, "Deleted") 
 }
-
 func Welcome(c echo.Context) error {
 	//return c.JSON( http.StatusOK, "<strong>Hello, World!</strong>" )
 	//return c.String(http.StatusOK, "Hello, World!")	
@@ -147,9 +183,10 @@ func main() {
 
 	// Route => handler
 	e.GET("/", Welcome)
-	e.GET("/persons",    getPersons)
-	e.GET("/persons/:id", getPerson)
-	e.POST("/persons",    CreatePerson)
+	e.GET("/persons",        getPersons)
+	e.GET("/persons/:id",    getPerson)
+	e.POST("/persons",       CreatePerson)
+	e.PUT("/persons/:id",    UpdatePerson)
 	e.DELETE("/persons/:id", DeletePerson)
 	e.Logger.Fatal(e.Start(":1323"))
 }
