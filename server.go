@@ -7,6 +7,9 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"net/http"
+
+	//control "go.api.puro.mysql/controller/mssql"
+
 )
 
 type PersonScan struct {
@@ -165,7 +168,7 @@ func DeletePerson(c echo.Context) error {
 	fmt.Println(result.RowsAffected())
 	return c.JSON(http.StatusOK, "Deleted") 
 }
-func Welcome(c echo.Context) error {
+func Welcome(c echo.Context)      error {
 	//return c.JSON( http.StatusOK, "<strong>Hello, World!</strong>" )
 	//return c.String(http.StatusOK, "Hello, World!")	
 	return c.HTML(http.StatusOK, "<strong> High performance, minimalist Go web framework ⇨ http server started on [::]:1323 </strong>")
@@ -188,5 +191,9 @@ func main() {
 	e.POST("/persons",       CreatePerson)
 	e.PUT("/persons/:id",    UpdatePerson)
 	e.DELETE("/persons/:id", DeletePerson)
+	
 	e.Logger.Fatal(e.Start(":1323"))
+	
+
+	//control.Run()
 }

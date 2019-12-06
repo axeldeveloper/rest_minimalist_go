@@ -40,6 +40,18 @@ go mod init rest_minimalist_go
 #  Rum server
 > go run server.go
 
+
+# SQL SERVER
+## Repositório oficial do Microsoft GitHub contendo exemplos de código para o SQL Server
+Leia mais <https://github.com/microsoft/sql-server-samples>
+
+# Pacotes 
+- go get github.com/denisenkom/go-mssqldb
+- go install github.com/denisenkom/go-mssqldb
+
+#  Rum test
+go run server_mssql.go
+
 # Echo
 
      ____     __
