@@ -1,38 +1,37 @@
-# Projeto rest minimalist
-## High performance, minimalist Go web framework 
+# Project rest minimalist SQLSERVER
+
+## Project
+- GOLANG
+- MYSQL
+- REST
+- ECHO
+
+
+## High performance, minimalist Go web framework
 ### https://code.labstack.com/go
 
 ![My Go logo](https://github.com/axeldeveloper/rest_go_mongo/blob/master/axel-pk-go.png?raw=true "Axel alexander")
 
 
 
-
-### go help list 
-    - $ go get github.com/labstack/echo
-    - $ go get github.com/labstack/echo/middleware
-    - $ go get github.com/go-sql-driver/mysql
-
-
-## projeto
-- GOLANG
-- MYSQL
-- REST
-- ECHO
-
 # Craindo projeto
-go mod init rest_minimalist_go
+```go
+$ go mod init go.api.puro.mysql
+```
+### Install dependencies
+```go
+$ go get -u github.com/labstack/echo
+$ go get -u github.com/labstack/echo/middleware
+$ go get -u github.com/go-sql-driver/mysql
+$ go get -u github.com/denisenkom/go-mssqldb
+```
 
-# Instalando pacotes 
+# Routes 
+GET  => http://localhost:1323/persons
 
-- go get -u github.com/labstack/echo
-- go get -u github.com/labstack/echo/middleware
-- go get -u github.com/go-sql-driver/mysql
+GET  => http://localhost:1323/persons/50
 
-
-# Routes - Rotas do Projeto 
-    GET  => http://localhost:1323/persons
-    GET  => http://localhost:1323/persons/50
-    POST => http://localhost:1323/persons
+POST => http://localhost:1323/persons
 
 
 
@@ -45,12 +44,9 @@ go mod init rest_minimalist_go
 ## Repositório oficial do Microsoft GitHub contendo exemplos de código para o SQL Server
 Leia mais <https://github.com/microsoft/sql-server-samples>
 
-# Pacotes 
-- go get github.com/denisenkom/go-mssqldb
-- go install github.com/denisenkom/go-mssqldb
 
 #  Rum test
-go run server_mssql.go
+go run server.go
 
 # Echo
 

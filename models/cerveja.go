@@ -1,35 +1,54 @@
-package mssql
+package models
 
 import (
-	"net/http"
+	"fmt"
+	"time"
+
+	"go.api.puro.mysql/db"
 
 	_ "github.com/denisenkom/go-mssqldb"
-	"github.com/labstack/echo"
-	"go.api.puro.mysql/models"
 )
 
-func AllBeers(c echo.Context) error {
+type Cerveja struct {
+	Id        int       `json:id`
+	Score     string    `json:score`
+	Winner    string    `json:winner`
+	Bar       string    `json:bar`
+	CreatedOn time.Time `json:created_on`
+	IsFinal   bool      `json:is_final`
+}
 
-	cervejas := &models.Cerveja{}
-	lists := cervejas.GetBeers()
+// ReadEmployees read all employees
+func (c Cerveja) GetBeers() []Cerveja {
+	db := db.CreateCon()
 
-	return c.JSON(http.StatusOK, lists)
+	tsql := " SELECT * FROM Cerveja "
+	//tsql := fmt.Sprintf(q)
+	rows, err := db.Query(tsql)
+	if err != nil {
+		fmt.Println("Error reading rows: " + err.Error())
+		return nil
+	}
+	defer rows.Close()
+
+	var cervejas []Cerveja
+
+	count := 0
+	for rows.Next() {
+		var cerveja Cerveja
+		err := rows.Scan(&cerveja.Id, &cerveja.Score, &cerveja.Winner, &cerveja.Bar, &cerveja.CreatedOn, &cerveja.IsFinal)
+		if err != nil {
+			fmt.Println("Error reading rows: " + err.Error())
+			return nil
+		}
+		fmt.Printf("ID: %d, Score: %s, Winner: %s\n", cerveja.Id, cerveja.Score, cerveja.Winner)
+		cervejas = append(cervejas, cerveja)
+		count++
+	}
+	return cervejas
 }
 
 /*
-func CreateCon() *sql.DB {
-	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;", server, user, password, port, database)
-	conn, err := sql.Open("mssql", connString)
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("db is connected")
-	}
-
-	fmt.Printf("Connected!\n")
-	//defer conn.Close()
-	return conn
-}
 
 func CreateEmployee(db *sql.DB, name string, location string) (int64, error) {
 	tsql := fmt.Sprintf("INSERT INTO TestSchema.Employees (Name, Location) VALUES ('%s','%s');",
@@ -42,6 +61,7 @@ func CreateEmployee(db *sql.DB, name string, location string) (int64, error) {
 	return result.LastInsertId()
 }
 
+
 func UpdateEmployee(db *sql.DB, name string, location string) (int64, error) {
 	tsql := fmt.Sprintf("UPDATE TestSchema.Employees SET Location = '%s' WHERE Name= '%s'",
 		location, name)
@@ -53,6 +73,7 @@ func UpdateEmployee(db *sql.DB, name string, location string) (int64, error) {
 	return result.LastInsertId()
 }
 
+
 func DeleteEmployee(db *sql.DB, name string) (int64, error) {
 	tsql := fmt.Sprintf("DELETE FROM TestSchema.Employees WHERE Name='%s';", name)
 	result, err := db.Exec(tsql)
@@ -62,6 +83,7 @@ func DeleteEmployee(db *sql.DB, name string) (int64, error) {
 	}
 	return result.RowsAffected()
 }
+
 
 func ExecuteAggregateStatement(db *sql.DB) {
 	result, err := db.Prepare("SELECT SUM(Price) as sum FROM Table_with_5M_rows")
@@ -74,4 +96,5 @@ func ExecuteAggregateStatement(db *sql.DB) {
 	err = row.Scan(&sum)
 	fmt.Printf("Sum: %s\n", sum)
 }
+
 */
